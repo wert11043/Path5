@@ -2,10 +2,17 @@ const config = window.QUIZ_CONFIG || {};
 const rows = window.QUIZ_ROWS || [];
 const mixedGroupLabel = config.mixedGroupLabel || "全部混合";
 
-const FIELD_OPTIONS =
+const FALLBACK_FIELDS =
   Array.isArray(config.fieldOptions) && config.fieldOptions.length > 0
     ? config.fieldOptions
     : [{ key: "clue", label: "線索" }];
+
+function getGroupFields(group) {
+  if (group !== mixedGroupLabel && config.groupFields && config.groupFields[group]) {
+    return config.groupFields[group];
+  }
+  return FALLBACK_FIELDS;
+}
 
 const derivedGroups = [...new Set(rows.map((row) => row.group).filter(Boolean))];
 const configuredGroups =
@@ -19,7 +26,12 @@ const GROUP_OPTIONS = configuredGroups.includes(mixedGroupLabel)
 const MIXED_LIMIT = config.mixedLimit || 16;
 
 let currentGroup = config.defaultGroup || GROUP_OPTIONS[GROUP_OPTIONS.length - 1] || mixedGroupLabel;
-let currentField = config.defaultField || FIELD_OPTIONS[0].key;
+let currentField = (function () {
+  const g = config.defaultGroup || mixedGroupLabel;
+  const fields = getGroupFields(g);
+  const df = config.defaultField;
+  return (df && fields.some(function (f) { return f.key === df; })) ? df : (fields[0] ? fields[0].key : "");
+})();
 let pairs = [];
 let matched = 0;
 let errors = 0;
@@ -56,7 +68,7 @@ function shuffle(list) {
 }
 
 function getFieldLabel() {
-  return FIELD_OPTIONS.find((item) => item.key === currentField)?.label ?? currentField;
+  return getGroupFields(currentGroup).find((item) => item.key === currentField)?.label ?? currentField;
 }
 
 function buildPool() {
@@ -101,6 +113,8 @@ function renderFilters() {
     elements.groupChips.appendChild(
       createChip(group, group === currentGroup, () => {
         currentGroup = group;
+        const fields = getGroupFields(group);
+        currentField = fields.length > 0 ? fields[0].key : (FALLBACK_FIELDS[0] ? FALLBACK_FIELDS[0].key : "");
         hideAnswers();
         startGame();
       })
@@ -108,7 +122,7 @@ function renderFilters() {
   });
 
   elements.fieldChips.innerHTML = "";
-  FIELD_OPTIONS.forEach((field) => {
+  getGroupFields(currentGroup).forEach((field) => {
     elements.fieldChips.appendChild(
       createChip(field.label, field.key === currentField, () => {
         currentField = field.key;
