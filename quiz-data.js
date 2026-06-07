@@ -538,12 +538,12 @@ var QUIZ_ROWS = [
   },
   {
     group: "先天 & 代謝骨病", answer: "Osteopetrosis（骨石症）",
-    gene: "CLCN7（AD）；TCIRG1（AR）；CA2（AR + renal tubular acidosis）；RANKL mutation（AR，osteoclast-poor）",
+    gene: "CLCN7（AD）；TCIRG1（AR）；CA2（AR + renal tubular acidosis）；RANKL mutation（AR，osteoclast-poor）；IKBKG/NEMO（AR + ectodermal dysplasia）",
     lab: "—",
     micro_xray: "Erlenmeyer flask deformity（X-ray）；marble bone；骨髓腔消失 → pancytopenia；HSCT 治療",
     histology: "Osteoclast dysfunction → woven bone 無法 remodel；Erlenmeyer flask deformity；marble bone",
     clinical: "骨髓腔消失 → pancytopenia；HSCT 治療（osteoclast 為骨髓來源）",
-    keypoint: "HSCT 治療；Erlenmeyer flask；RANKL mutation = osteoclast-poor；CA2 mutation = renal tubular acidosis"
+    keypoint: "HSCT 治療；Erlenmeyer flask；RANKL mutation = osteoclast-poor；CA2 mutation = renal tubular acidosis；IKBKG/NEMO = ectodermal dysplasia + osteopetrosis"
   },
   {
     group: "先天 & 代謝骨病", answer: "Osteoporosis（骨質疏鬆）",
@@ -581,10 +581,43 @@ var QUIZ_ROWS = [
     clinical: "ALP↑↑（Ca/P 正常）；骨骼痛；high-output heart failure；<1% → osteosarcoma（polyostotic = 5-10%）",
     keypoint: "ALP↑↑ + Ca/P 正常 = Paget；超大 osteoclasts（>12 nuclei）；Mosaic pattern（晚期）"
   },
+  {
+    group: "先天 & 代謝骨病", answer: "Osteomyelitis（骨髓炎）",
+    gene: "S. aureus（最常見；血行感染）；Salmonella（Sickle cell 病人）；Pseudomonas（靜脈注射毒品者）；凝固酶陰性葡球菌（假體感染）",
+    lab: "WBC↑；CRP↑；ESR↑；Blood culture；Bone scan / MRI 最敏感（早期診斷）",
+    micro_xray: "Sequestrum（死骨 = devitalized avascular bone）+ Involucrum（新骨 = periosteal new bone）；Cloaca（慢性排膿孔）",
+    histology: "急性：neutrophil infiltration；慢性：Sequestrum（死骨）+ Involucrum（periosteal 新骨）+ Brodie's abscess",
+    clinical: "小孩：長骨 metaphysis（血流豐富）；成人：椎體 spondylodiscitis；Sickle cell → Salmonella 特殊",
+    keypoint: "Sequestrum = 死骨；Involucrum = 新骨；S. aureus 最常見；Salmonella + Sickle cell；MRI 最敏感"
+  },
 
   // ════════════════════════════════════════
   //  骨腫瘤  欄位：腫瘤 | 良/惡/中 | 好發年齡 | 好發位置 | 基因 | X-ray | Micro key
   // ════════════════════════════════════════
+  {
+    group: "骨腫瘤", answer: "Osteoid osteoma",
+    grade: "良",
+    age: "<30y（10-20y 多）",
+    location: "Long bone cortex（femur / tibia）；偶脊椎橫突",
+    gene: "—",
+    xray: "Intracortical nidus <2cm + dense sclerotic rim；reactive periosteal thickening",
+    micro: "Nidus = woven bone + rimming osteoblasts + richly vascular fibrous stroma",
+    histology: "Nidus（<2cm）= woven bone + osteoblast rimming + vascular fibrous stroma；reactive sclerosis 圍繞",
+    clinical: "良性；<30y；Long bone cortex；Night pain（夜間疼痛）+ aspirin 緩解（PGE2↑）；RFA = 治療首選",
+    keypoint: "Night pain + aspirin relief = Osteoid osteoma；Nidus <2cm；vs Osteoblastoma = >2cm + aspirin 無效"
+  },
+  {
+    group: "骨腫瘤", answer: "Osteoblastoma",
+    grade: "中（locally aggressive）",
+    age: "10-30y",
+    location: "Posterior elements of vertebra（最常）；long bone diaphysis",
+    gene: "—",
+    xray: "Lytic lesion ≥2cm；± expansion；posterior vertebral elements；無 sclerosis",
+    micro: "Osteoblast-rimmed woven bone trabeculae（組織學同 osteoid osteoma 但 ≥2cm）；vascular fibrous stroma",
+    histology: "Osteoblast-rimmed woven bone（組織學同 osteoid osteoma）；≥2cm；脊椎椎後元素好發；無 sclerosis",
+    clinical: "中等；10-30y；脊椎椎後元素最常；aspirin 無效；≥2cm；手術切除",
+    keypoint: "≥2cm + 脊椎椎後元素 + aspirin 無效 = Osteoblastoma；vs Osteoid osteoma = <2cm + Night pain + aspirin 有效"
+  },
   {
     group: "骨腫瘤", answer: "Osteosarcoma",
     grade: "惡",
@@ -608,6 +641,42 @@ var QUIZ_ROWS = [
     histology: "Infiltrative border + host bone entrapment；hypercellular nodules；myxoid stroma；cytologic atypia",
     clinical: "惡性；40y+；Axial skeleton（pelvis、ribs）；chemo 無效，直接手術",
     keypoint: "Chemo 無效（vs OS 有效）；Central = IDH；Peripheral = EXT；40y+；axial"
+  },
+  {
+    group: "骨腫瘤", answer: "Mesenchymal chondrosarcoma",
+    grade: "惡（高惡性）",
+    age: "10-30y（最年輕的 chondrosarcoma）",
+    location: "Jaw / ribs / extraskeletal（骨外也可見）",
+    gene: "HEY1-NCOA2 fusion（highly specific）",
+    xray: "Bimorphic：calcified cartilage 小島 + lytic soft tissue；小灶軟骨夾雜 small cells",
+    micro: "Bimorphic：small round cells（hemangiopericytoma-like staghorn vessels）+ well-differentiated hyaline cartilage islands",
+    histology: "Bimorphic（小圓細胞 + 分化良好軟骨島）；HEY1-NCOA2；可延遲遠端轉移（delayed metastasis）",
+    clinical: "惡性；10-30y；Jaw / extraskeletal；可 chemo（含 small round cell 成分）；可延遲轉移",
+    keypoint: "Bimorphic（small round cells + cartilage islands）；HEY1-NCOA2；最年輕 chondrosarcoma；可 chemo（vs conventional = 無效）"
+  },
+  {
+    group: "骨腫瘤", answer: "Clear cell chondrosarcoma",
+    grade: "惡（低惡性度）",
+    age: "20-40y",
+    location: "Epiphysis of long bones（proximal femur / humerus）；罕見位置",
+    gene: "IDH2（多數）",
+    xray: "Well-defined lucent lesion in epiphysis；± calcification；良性外觀",
+    micro: "Clear cytoplasm chondrocytes（glycogen-rich）+ osteoclast-type giant cells + reactive woven bone trabeculae",
+    histology: "Clear cytoplasm chondrocytes（glycogen↑）；osteoclast-type giant cells；reactive woven bone；low-grade but malignant",
+    clinical: "惡性低惡性度；Epiphysis（rare 位置）；外觀像良性但會轉移；手術完整切除",
+    keypoint: "Clear cytoplasm = Clear cell chondrosarcoma；Epiphysis（极罕見）；IDH2；low-grade 但仍惡性"
+  },
+  {
+    group: "骨腫瘤", answer: "Dedifferentiated chondrosarcoma",
+    grade: "惡（最高惡性度）",
+    age: "50y+（老年）",
+    location: "Long bone / axial skeleton（同 conventional）",
+    gene: "IDH1/IDH2（低惡性成分）；高惡性成分 = complex karyotype",
+    xray: "Bimorphic：低惡性軟骨鈣化區 + 高惡性溶骨區（abrupt demarcation）",
+    micro: "Abrupt demarcation（無過渡區）= 診斷關鍵；Low-grade cartilage（conventional）→ abrupt → High-grade sarcoma（OS/UPS/fibrosarcoma）",
+    histology: "Low-grade cartilage + abrupt transition to high-grade sarcoma（無過渡區）；bimorphic 型態",
+    clinical: "最差預後的 chondrosarcoma；50y+；chemo 效果差；aggressive",
+    keypoint: "Abrupt demarcation（無過渡區）= Dedifferentiated；最差預後 chondrosarcoma；常在 conventional 基礎上惡化"
   },
   {
     group: "骨腫瘤", answer: "Ewing sarcoma",
@@ -656,6 +725,18 @@ var QUIZ_ROWS = [
     histology: "Blood-filled cysts；plump spindle cells + osteoclast-type giant cells；reactive woven bone lined by osteoblasts；blue bone（1/3 = calcified basophilic matrix）",
     clinical: "良性；Adolescence；femur、tibia、vertebra",
     keypoint: "Blood-filled cysts；blue bone；Metaphysis/diaphysis（vs GCT = Epiphysis）"
+  },
+  {
+    group: "骨腫瘤", answer: "Non-ossifying fibroma（NOF）",
+    grade: "良（self-limiting）",
+    age: "<20y（兒童青少年）",
+    location: "Distal femur / tibia metaphysis（eccentric cortical）",
+    gene: "—",
+    xray: "Eccentric geographic lucency + sclerotic rim（metaphysis cortex）；lobulated；自行消退",
+    micro: "Storiform spindle cells + foamy histiocytes（xanthoma cells）+ osteoclast-type giant cells + hemosiderin；無 osteoid",
+    histology: "Storiform spindle cells + foamy histiocytes（xanthoma cells）+ osteoclast-type giant cells + hemosiderin；無 osteoid",
+    clinical: "良性；<20y；distal femur / tibia；大多 asymptomatic；可自行消退；偶因骨折被發現",
+    keypoint: "Storiform + foamy histiocytes（xanthoma cells）+ giant cells + hemosiderin；無 osteoid；<20y；distal femur metaphysis"
   },
   {
     group: "骨腫瘤", answer: "Osteochondroma",
@@ -739,6 +820,39 @@ var QUIZ_ROWS = [
     histology: "Urate crystal deposition；secondary gout",
     clinical: "Secondary gout + neurologic symptoms + self-mutilation（自傷行為）",
     keypoint: "完全 HGPRT = secondary gout + 神經症狀；Partial HGPRT = primary gout（只有關節）"
+  },
+  {
+    group: "關節疾病", answer: "Tenosynovial GCT（PVNS / localized）",
+    nature: "良性腫瘤（局部型 or 瀰漫型/PVNS）",
+    mechanism: "CSF1 overexpression（t(1;2) CSF1-COL6A3 fusion）→ monocyte/macrophage/osteoclast 招募",
+    clinical: "局部型：手指腱鞘（最常）；瀰漫型 / PVNS：大關節（膝）；局部型可完全切除；瀰漫型 recur 率高",
+    micro: "Bland mononuclear synoviocyte-like cells + histiocyte-like cells + multinucleated osteoclast-type giant cells + hemosiderin（rust-brown color）",
+    serology: "—（CSF1 / CSF1R IHC 支持性）",
+    gene: "CSF1 overexpression（t(1;2) CSF1-COL6A3 fusion）；局部型可完全切除；瀰漫型 = PVNS",
+    histology: "Bland mononuclear cells + osteoclast-type giant cells + hemosiderin；局部型（finger）vs 瀰漫型（knee/PVNS）",
+    keypoint: "CSF1（t(1;2)）= monocyte-osteoclast 招募；局部型（finger）vs 瀰漫型 PVNS（knee）；hemosiderin = rust-brown"
+  },
+  {
+    group: "關節疾病", answer: "Ganglion cyst（腱鞘囊腫）",
+    nature: "假性囊腫（無上皮或滑膜層）",
+    mechanism: "腱鞘或關節囊黏液樣退化（非滑液漏出）；壁為纖維結締組織，無上皮 / 滑膜",
+    clinical: "手腕背側最常見；多無症狀；可自行消退；可穿刺或手術",
+    micro: "纖維結締組織囊壁（無上皮層）；mucinous 黏液樣內容物；無炎症細胞",
+    serology: "—",
+    gene: "—（退化性；非腫瘤）",
+    histology: "纖維結締組織囊壁（無上皮層）；mucinous 內容物",
+    keypoint: "無上皮層（假性囊腫）；手腕背側最常見；mucinous 內容物；vs Baker cyst = 有滑膜層 + 膝窩"
+  },
+  {
+    group: "關節疾病", answer: "Synovial cyst（Baker cyst）",
+    nature: "真性滑膜囊腫（囊壁有滑膜細胞層）",
+    mechanism: "膝關節後方壓力↑（OA / RA）→ 滑液向後膨出至腓腸肌-半膜肌滑囊（popliteal bursa）",
+    clinical: "膝窩（popliteal fossa）；常合併 OA 或 RA；可破裂 → 急性小腿腫痛（類 DVT！）",
+    micro: "囊壁有滑膜細胞層（真性囊腫）；± 慢性發炎細胞",
+    serology: "—（超音波 / MRI 診斷）",
+    gene: "—（繼發於 OA / RA；非腫瘤）",
+    histology: "囊壁有滑膜細胞層（真性囊腫）；± 慢性發炎細胞",
+    keypoint: "膝窩 popliteal fossa；有滑膜層（真性囊腫）；合併 OA/RA；破裂 = 類 DVT（小腿急腫）"
   },
 
   // ════════════════════════════════════════
@@ -1085,6 +1199,15 @@ var QUIZ_ROWS = [
     keypoint: "EXT1/2（AD）= HME；peripheral chondrosarcoma 的 predisposing mutation",
     histology: "Multiple osteochondromas；growth plate outer column 失去 polarity → exostosis",
     clinical: "青少年；多發骨軟骨瘤；可惡化為 peripheral chondrosarcoma"
+  },
+  {
+    group: "遺傳症候群", answer: "VHL（Von Hippel-Lindau）",
+    gene: "VHL（3p25）；AD；pVHL = HIF-α ubiquitin ligase",
+    pathway: "HIF pathway（pVHL 失去 → HIF-α 無法降解 → VEGF↑ → 血管新生）",
+    tumor_main: "Clear cell RCC（雙側多發；最常見死因）+ Hemangioblastoma（cerebellum / retina）+ Pheochromocytoma + Pancreatic cysts/NETs",
+    keypoint: "VHL → HIF↑ → VEGF↑；Clear cell RCC + Hemangioblastoma + Pheochromocytoma = VHL Triad；最常見死因 = RCC",
+    histology: "Clear cell RCC（雙側多發）；Hemangioblastoma（cerebellum / retina）；Pheochromocytoma；Pancreatic cysts / NETs",
+    clinical: "雙側多發 clear cell RCC；retinal angioma；hemangioblastoma（cerebellum）；pheochromocytoma；pancreatic cysts"
   },
   {
     group: "遺傳症候群", answer: "Gardner syndrome",
