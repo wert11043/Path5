@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Path5 — 病理考試9 配合題</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d2e;
+    --card: #222538;
+    --border: #2e3252;
+    --accent: #4f6ef7;
+    --accent2: #7c3aed;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  header {
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    padding: 18px 24px 14px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  header h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: .02em; }
+  header .subtitle { font-size: .8rem; opacity: .8; margin-top: 2px; }
+
+  /* Set selector */
+  #set-menu {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    padding: 14px 20px; background: var(--surface); border-bottom: 1px solid var(--border);
+  }
+  .set-btn {
+    padding: 6px 13px; border-radius: 20px; border: 1.5px solid var(--border);
+    background: var(--card); color: var(--muted); font-size: .78rem; cursor: pointer;
+    transition: all .15s;
+  }
+  .set-btn:hover { border-color: var(--accent); color: var(--text); }
+  .set-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+
+  /* Score bar */
+  #score-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 20px; background: var(--surface); border-bottom: 1px solid var(--border);
+    font-size: .85rem;
+  }
+  #score-bar .label { color: var(--muted); }
+  #progress { font-weight: 700; color: var(--accent); font-size: 1rem; }
+  #shuffle-btn {
+    padding: 5px 14px; border-radius: 6px; background: var(--accent); border: none;
+    color: #fff; font-size: .8rem; cursor: pointer; font-weight: 600;
+  }
+  #shuffle-btn:hover { opacity: .85; }
+
+  /* Grid */
+  #quiz-area {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; padding: 16px 20px; max-width: 1100px; margin: 0 auto;
+  }
+  .col-label {
+    grid-column: span 1; font-size: .72rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .1em; padding: 0 2px 4px;
+  }
+
+  .item {
+    padding: 11px 14px; border-radius: var(--radius);
+    background: var(--card); border: 1.5px solid var(--border);
+    cursor: pointer; transition: border-color .15s, background .15s, transform .1s;
+    font-size: .85rem; line-height: 1.5; user-select: none;
+    min-height: 52px; display: flex; align-items: center;
+  }
+  .item:hover:not(.matched):not(.selected) { border-color: var(--accent); background: #2a2e48; }
+  .item.selected { border-color: var(--accent); background: #1e2e5c; box-shadow: 0 0 0 2px var(--accent); }
+  .item.matched { border-color: var(--green); background: #0d2b1a; color: #86efac; cursor: default; }
+  .item.wrong { animation: shake .35s; border-color: var(--red); background: #2b0d0d; }
+  .item.correct-flash { animation: flash-green .5s; }
+
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    20%{transform:translateX(-6px)}
+    40%{transform:translateX(6px)}
+    60%{transform:translateX(-4px)}
+    80%{transform:translateX(4px)}
+  }
+  @keyframes flash-green {
+    0%{background:#0d4a20} 100%{background:#0d2b1a}
+  }
+
+  /* Completion overlay */
+  #complete-banner {
+    display: none; margin: 20px auto; max-width: 420px;
+    background: linear-gradient(135deg, #1a2e14, #0d2b1a);
+    border: 1.5px solid var(--green); border-radius: 14px;
+    padding: 28px; text-align: center;
+  }
+  #complete-banner h2 { color: var(--green); font-size: 1.4rem; margin-bottom: 8px; }
+  #complete-banner p { color: var(--muted); font-size: .9rem; margin-bottom: 18px; }
+  #complete-banner button {
+    padding: 9px 22px; border-radius: 8px; border: none;
+    background: var(--green); color: #000; font-weight: 700; font-size: .9rem; cursor: pointer;
+    margin: 0 6px;
+  }
+  #complete-banner button.secondary {
+    background: var(--card); border: 1.5px solid var(--border); color: var(--text);
+  }
+
+  /* Instruction */
+  #hint { text-align: center; color: var(--muted); font-size: .78rem; padding: 8px; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    #quiz-area { grid-template-columns: 1fr; gap: 6px; padding: 10px 12px; }
+    .col-label:first-child { display: block; }
+    .col-label:nth-child(2) { display: none; }
+    header h1 { font-size: 1.1rem; }
+    #set-menu { padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="subtitle">病理考試 9 ｜ 114學年度下學期</div>
+    <h1>Path5 配合題練習</h1>
+  </div>
+</header>
+
+<div id="set-menu"></div>
+
+<div id="score-bar">
+  <span class="label">進度：</span>
+  <span id="progress">0 / 0</span>
+  <button id="shuffle-btn" onclick="shuffleAndRender()">🔀 重新洗牌</button>
+</div>
+
+<div id="hint">點選左欄的 <b>題目</b>，再點選右欄的 <b>答案</b>，看能否配對成功</div>
+
+<div id="quiz-area"></div>
+
+<div id="complete-banner">
+  <h2>✅ 全部配對完成！</h2>
+  <p id="complete-msg"></p>
+  <button onclick="shuffleAndRender()">再練一次</button>
+  <button class="secondary" onclick="nextSet()">下一組 →</button>
+</div>
+
+<script>
+const SETS = [
+  {
+    title: "皮膚腫瘤基因",
+    short: "皮膚基因",
+    pairs: [
+      ["Melanoma — Acral type", "KIT mutation（non-sun exposed）"],
+      ["Melanoma — Superficial spreading", "BRAF / NRAS（Non-CSD）"],
+      ["Melanoma — Lentigo maligna", "TERT promoter（CSD，長期日照，老年）"],
+      ["BCC", "PTCH loss → basaloid island + peripheral palisading + retraction cleft"],
+      ["SCC", "TP53；日照、HPV(5/8)、砷（烏腳病）、burn scar"],
+      ["Seborrheic keratosis", "FGFR3；horn cysts；Leser-Trelat sign"],
+      ["Mycosis fungoides（MF）", "CD4+ T cell；epidermotropism + Pautrier microabscesses"],
+      ["DFSP（皮膚）", "t(17;22) COL1A1-PDGFB；storiform + honeycomb fat invasion"],
+      ["Mastocytosis", "KIT activation；Darier's sign；Toluidine blue / Giemsa 染 granules"],
+    ]
+  },
+  {
+    title: "水泡病配對",
+    short: "水泡病",
+    pairs: [
+      ["Pemphigus vulgaris", "Suprabasal 裂；IgG vs DSG3；tombstone row"],
+      ["Pemphigus foliaceus", "Subcorneal 裂；IgG vs DSG1；無 mucosal"],
+      ["Bullous pemphigoid", "Subepidermal 裂；IgG vs BPAG1/2（hemidesmosome）；eosinophils↑"],
+      ["Dermatitis herpetiformis", "Subepidermal；Granular IgA at dermal papillae tips；celiac disease"],
+      ["Epidermolysis bullosa（EB）", "Subepidermal；遺傳性 structural protein defect；非自體免疫"],
+      ["Impetigo", "Subcorneal pustule；DIF(−)；S. aureus 外毒素裂解 DSG1"],
+      ["Lichen planus", "6P：Pruritic Purple Polygonal Planar Papules Plaques；Lichenoid band-like interface dermatitis"],
+      ["Psoriasis", "Psoriasiform hyperplasia；Munro's microabscess；Parakeratosis；Auspitz sign"],
+    ]
+  },
+  {
+    title: "骨腫瘤特徵",
+    short: "骨腫瘤",
+    pairs: [
+      ["Osteosarcoma", "p53/Rb；Codman's triangle；malignant osteoid（lace-like）；chemo 有效"],
+      ["Chondrosarcoma", "IDH1/IDH2（central）；ring & arc calcification；chemo 無效"],
+      ["Ewing sarcoma（骨）", "t(11;22) EWS-FLI1；onion-skin；diaphysis；<20y"],
+      ["GCT（Giant cell tumor）", "H3.3 G34W；soap bubble；epiphysis（distal femur）；Denosumab"],
+      ["Fibrous dysplasia", "GNAS1 somatic；ground glass；curvilinear woven bone，無 osteoblastic rimming"],
+      ["ABC（Aneurysmal Bone Cyst）", "USP6 rearrangement；blood-filled cysts；blue bone；eggshell X-ray"],
+      ["Osteochondroma", "EXT1/EXT2；metaphysis；cartilage cap；medullary cavity 連通"],
+      ["Enchondroma", "IDH1/IDH2（somatic mosaic）；lobulated calcification；short/long bone"],
+    ]
+  },
+  {
+    title: "軟組織腫瘤基因",
+    short: "軟組織基因",
+    pairs: [
+      ["Synovial sarcoma", "t(X;18) SS18-SSX；Biphasic（epithelioid + spindle）；15–40y"],
+      ["Myxoid liposarcoma", "t(12;16) FUS-DDIT3；chicken-wire capillary + lipoblasts；30–40y；thigh"],
+      ["Well-diff liposarcoma / ALT", "MDM2 / CDK4 amplification（12q13-15）；atypical spindle cells in septa"],
+      ["DFSP（軟組織）", "t(17;22) COL1A1-PDGFB；storiform；honeycomb fat invasion；易 recur"],
+      ["Alveolar RMS", "t(2;13) PAX3-FOXO1；diffuse myogenin+；例外可淋巴轉移"],
+      ["Ewing sarcoma（軟組織）", "t(11;22) EWS-FLI1；small blue round cells；Homer-Wright rosettes"],
+      ["Nodular fasciitis", "MYH9-USP6 fusion；self-limited；tissue culture type；易誤診為惡性"],
+      ["Deep fibromatosis（Desmoid）", "APC / β-catenin；Gardner syndrome；locally aggressive，不轉移"],
+      ["Solitary fibrous tumor（SFT）", "NAB2-STAT6 fusion；staghorn branching vessels；paraneoplastic IGF2 低血糖"],
+    ]
+  },
+  {
+    title: "骨骼肌疾病 Micro",
+    short: "骨骼肌",
+    pairs: [
+      ["DMD（Duchenne）", "Dystrophin IHC 完全消失；X-linked；30歲前死亡；fatty replacement"],
+      ["Dermatomyositis", "Perifascicular atrophy；MAC 沉積在 capillary beds（非 myocytes）"],
+      ["IBM（Inclusion Body Myositis）", "Rimmed vacuoles + Congo-red amyloid；CD8+ T cells；>65y；distal first"],
+      ["IMNM", "Paucity of inflammatory infiltrate；myofiber necrosis + macrophage；anti-HMG-CoA reductase"],
+      ["Mitochondrial myopathy", "Ragged red fibers（Gomori trichrome）；COX activity↓；mtDNA mutation"],
+      ["Core myopathy", "RYR1；NADH central core 淡染；EM：Z-band 消失"],
+      ["Nemaline myopathy", "ACTA1；Gomori trichrome 見 inclusion；EM：nemaline rods"],
+      ["MG（Myasthenia gravis）", "Anti-AChR Ab；postsynaptic membrane 損傷；10% thymoma"],
+      ["LEMS", "Anti-VGCC Ab（presynaptic）；重複刺激→力量暫增；50% small cell lung Ca"],
+    ]
+  },
+  {
+    title: "眼耳疾病配對",
+    short: "眼耳疾病",
+    pairs: [
+      ["Cholesteatoma", "COM → 耳膜破裂 → squamous epithelium ingrowth → keratin-filled cyst；non-neoplastic"],
+      ["Otosclerosis", "AD，variable penetrance；stapes footplate 異常骨化 → conductive hearing loss；stapedectomy"],
+      ["Paraganglioma（中耳）", "SDH germline mutation；<30y 需懷疑；histology benign 外觀但一律視為 malignancy"],
+      ["AOM（急性中耳炎）", "S. pneumoniae / H. influenzae；bulging tympanic membrane；小孩好發"],
+      ["Uveal melanoma", "GNAQ/GNA11（非 BRAF）；血行轉移→肝；最常見原發性眼內腫瘤"],
+      ["Retinoblastoma", "RB germline mutation；Flexner-Wintersteiner rosettes；小孩最常見眼內惡性腫瘤"],
+      ["Open-angle glaucoma", "房水流出阻力↑；IOP↑；根本原因 unknown（B11重要）"],
+      ["Proptosis（眼球突出）", "Orbit 為封閉錐狀空間 → 體積增加 → 只能向前凸；Graves' → axial proptosis"],
+      ["Pterygium", "日照（actinic damage）；延伸入 cornea（Bowman layer）；超過 pupillary axis"],
+    ]
+  },
+  {
+    title: "遺傳性腫瘤症候群",
+    short: "遺傳症候群",
+    pairs: [
+      ["NF1", "NF1（17q11.2）；AD；RAS-MAPK（neurofibromin）；neurofibromas + MPNST；Lisch nodules"],
+      ["NF2", "NF2（22q12）；AD；bilateral vestibular schwannoma（CV angle）；merlin"],
+      ["Tuberous sclerosis", "TSC1/TSC2；AD；mTOR（hamartin/tuberin）；hamartomas + SEGA；ash-leaf spots"],
+      ["Schwannomatosis", "SMARCB1/LZTR1（22q11）；無 bilateral vestibular；four/five-hit model"],
+      ["McCune-Albright", "GNAS somatic mosaic；fibrous dysplasia + precocious puberty + café-au-lait；non-inherited"],
+      ["Enchondromatosis（Ollier/Maffucci）", "IDH1/IDH2 somatic mosaic；not inherited（postzygotic）；Maffucci + spindle cell hemangioma"],
+      ["Osteochondromatosis", "EXT1/EXT2；AD；Hedgehog pathway；multiple osteochondromas"],
+      ["Gardner syndrome", "APC / β-catenin；FAP variant；desmoid tumor（deep fibromatosis）"],
+    ]
+  },
+  {
+    title: "OA / RA / Gout 比較",
+    short: "關節疾病",
+    pairs: [
+      ["OA（Osteoarthritis）", "退化性；cartilage wear → fissures + osteophytes + eburnation；老年；weight-bearing joints"],
+      ["RA（Rheumatoid Arthritis）", "自體免疫；Pannus；ACPA(70%) + RF(80%)；HLA-DR4；young female"],
+      ["Gout", "Urate crystals；negatively birefringent（針狀）；固定需 absolute alcohol；metatarsal"],
+      ["CPPD（Pseudogout）", "Calcium pyrophosphate；rhomboid crystals；blue-purple；ANKH mutation（hereditary）"],
+      ["Lesch-Nyhan syndrome", "完全 HGPRT deficiency；X-linked；secondary gout + neurologic symptoms + self-mutilation"],
+      ["Paget disease", "Osteoclast → osteoblast；ALP↑↑；mosaic/jigsaw cement lines；giant osteoclasts（>12 nuclei）；swallowtail"],
+      ["Hyperparathyroidism", "PTH↑ → osteoclast↑；Brown tumor；Osteitis fibrosa cystica；Von Recklinghausen disease of bone"],
+      ["Rickets / Osteomalacia", "Vit D↓ → mineralization↓ → osteoid↑；growth plate 變寬；Rickets = 小孩；Osteomalacia = 成人"],
+    ]
+  },
+];
+
+let currentSetIdx = 0;
+let pairs = [];
+let leftItems = [];
+let rightItems = [];
+let selectedLeft = null;
+let matched = 0;
+let total = 0;
+
+function init() {
+  renderSetMenu();
+  loadSet(0);
+}
+
+function renderSetMenu() {
+  const menu = document.getElementById('set-menu');
+  menu.innerHTML = SETS.map((s, i) =>
+    `<button class="set-btn${i===0?' active':''}" onclick="loadSet(${i})" id="setbtn-${i}">${s.short}</button>`
+  ).join('');
+}
+
+function loadSet(idx) {
+  currentSetIdx = idx;
+  document.querySelectorAll('.set-btn').forEach((b, i) => b.classList.toggle('active', i===idx));
+  document.getElementById('complete-banner').style.display = 'none';
+  pairs = SETS[idx].pairs.map(([l, r]) => ({ left: l, right: r }));
+  total = pairs.length;
+  shuffleAndRender();
+}
+
+function shuffleAndRender() {
+  document.getElementById('complete-banner').style.display = 'none';
+  matched = 0;
+  selectedLeft = null;
+  updateProgress();
+
+  leftItems = shuffle([...pairs.map((p, i) => ({ text: p.left, idx: i }))]);
+  rightItems = shuffle([...pairs.map((p, i) => ({ text: p.right, idx: i }))]);
+
+  const area = document.getElementById('quiz-area');
+  area.innerHTML = `
+    <div class="col-label">📌 題目</div>
+    <div class="col-label">📝 答案</div>
+    ${leftItems.map((item, pos) =>
+      `<div class="item" id="L${item.idx}" data-idx="${item.idx}" onclick="selectLeft(${item.idx})">${item.text}</div>`
+    ).join('')}
+    ${rightItems.map((item, pos) =>
+      `<div class="item" id="R${item.idx}" data-idx="${item.idx}" onclick="selectRight(${item.idx})">${item.text}</div>`
+    ).join('')}
+  `;
+
+  // Re-order grid so left and right alternate visually (CSS grid handles columns)
+  // Actually grid-template-columns:1fr 1fr means items fill left col then right col
+  // We need to interleave for proper layout
+  // Better approach: use separate flex columns
+  area.innerHTML = `
+    <div class="col-label" style="grid-column:1">📌 題目</div>
+    <div class="col-label" style="grid-column:2">📝 答案</div>
+  `;
+
+  // Create left column items
+  leftItems.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'item';
+    el.id = `L${item.idx}`;
+    el.dataset.idx = item.idx;
+    el.style.gridColumn = '1';
+    el.innerHTML = stripMarkdown(item.text);
+    el.onclick = () => selectLeft(item.idx);
+    area.appendChild(el);
+  });
+
+  // Create right column items
+  rightItems.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'item';
+    el.id = `R${item.idx}`;
+    el.dataset.idx = item.idx;
+    el.style.gridColumn = '2';
+    el.innerHTML = stripMarkdown(item.text);
+    el.onclick = () => selectRight(item.idx);
+    area.appendChild(el);
+  });
+}
+
+function stripMarkdown(text) {
+  return text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+}
+
+function selectLeft(idx) {
+  const el = document.getElementById(`L${idx}`);
+  if (el.classList.contains('matched')) return;
+
+  // Deselect previous
+  if (selectedLeft !== null) {
+    const prev = document.getElementById(`L${selectedLeft}`);
+    if (prev) prev.classList.remove('selected');
+  }
+
+  selectedLeft = idx;
+  el.classList.add('selected');
+}
+
+function selectRight(idx) {
+  if (selectedLeft === null) return;
+  const rightEl = document.getElementById(`R${idx}`);
+  if (rightEl.classList.contains('matched')) return;
+
+  const leftEl = document.getElementById(`L${selectedLeft}`);
+
+  if (selectedLeft === idx) {
+    // Correct match
+    leftEl.classList.remove('selected');
+    leftEl.classList.add('matched');
+    rightEl.classList.add('matched');
+    matched++;
+    updateProgress();
+
+    if (matched === total) {
+      setTimeout(showComplete, 400);
+    }
+  } else {
+    // Wrong
+    leftEl.classList.add('wrong');
+    rightEl.classList.add('wrong');
+    setTimeout(() => {
+      leftEl.classList.remove('wrong');
+      rightEl.classList.remove('wrong');
+    }, 600);
+  }
+
+  selectedLeft = null;
+  if (leftEl) leftEl.classList.remove('selected');
+}
+
+function updateProgress() {
+  document.getElementById('progress').textContent = `${matched} / ${total}`;
+}
+
+function showComplete() {
+  const banner = document.getElementById('complete-banner');
+  banner.style.display = 'block';
+  document.getElementById('complete-msg').textContent =
+    `「${SETS[currentSetIdx].title}」全 ${total} 題配對完成！`;
+  banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function nextSet() {
+  const next = (currentSetIdx + 1) % SETS.length;
+  loadSet(next);
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+init();
+</script>
+</body>
+</html>
