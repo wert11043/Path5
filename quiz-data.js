@@ -1,4 +1,4 @@
-const QUIZ_CONFIG = {
+var QUIZ_CONFIG = {
   title: "Path5 病理配合題 — 考試9",
   subtitle: "皮膚・骨骼肌・骨骼・眼耳・軟組織・遺傳症候群 — 選上方分組，再選題型欄位，完成左右配對",
   answerLabel: "疾病 / 診斷",
@@ -36,7 +36,7 @@ const QUIZ_CONFIG = {
 // clinical = 臨床特徵 / 流行病學 / 好發位置
 // keypoint = 記憶點 / 考古陷阱 / 鑑別
 
-const QUIZ_ROWS = [
+var QUIZ_ROWS = [
 
   // ════════════════════════════════════════
   //  皮膚腫瘤  （來自「皮膚腫瘤分類速查」表格）
